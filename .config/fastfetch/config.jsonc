@@ -1,0 +1,64 @@
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+
+    // Swiss "Measure", as in the bar and the dashboard: a grid of quiet labels (8) and values in the text colour (39),
+    // headings with the short ruler under them, meters with an ink fill, and the bar's 24-hour ruler to close. Red is
+    // the desktop's one red (E93F20, the same in both modes) and only marks: the NixOS mark and the index mark at now.
+    // Everything else is the 16 terminal colours, so kitty's palette decides Light and Dark Mode.
+    // The column is 49 wide (the ruler: two per hour), so the fetch fits a half-screen terminal of 85.
+
+    // The NixOS snowflake (portrait.png, a WebP) in the one red, drawn by kitty as an image: 20 x 8 cells is square in
+    // a Geist Mono 11 cell (about 9 x 22 px). Outside kitty fastfetch falls back to its own text logo.
+    // Remake it after changing portrait.png: magick portrait.png -fill '#E93F20' -colorize 100 PNG32:snowflake.png
+    "logo": {
+        "type": "kitty-direct",
+        "source": "~/.config/fastfetch/snowflake.png",
+        "width": 20,
+        "height": 8,
+        "padding": { "top": 0, "left": 2, "right": 5 }
+    },
+
+    "display": {
+        "separator": "",
+        "color": { "keys": "90", "title": "39", "output": "39" },
+        "key": { "width": 12 },
+        "size": { "ndigits": 1 },
+        "percent": { "type": ["num", "bar", "bar-monochrome"], "spaceBeforeUnit": "always", "color": { "green": "39", "yellow": "39", "red": "31" } },
+        "bar": {
+            "char": { "elapsed": "━", "total": "─" },
+            "border": { "left": "", "right": "" },
+            "color": { "elapsed": "39", "total": "90" },
+            "width": 16
+        }
+    },
+
+    "modules": [
+        // Heading: the machine (bold) and who is on it, then the short ruler (an origin tick and four).
+        { "type": "title", "format": "{#1}{host-name<37}{#}{#90}{user-name>12}" },
+        { "type": "custom", "format": "{#90}├─┴─┴─┴─┴" },
+        "break",
+
+        { "type": "custom", "format": "HARDWARE{#90}                                       01" },
+        { "type": "custom", "format": "{#90}├─┴─┴─┴─┴" },
+        { "type": "command", "key": "Processor", "text": "sed -n '/^model name/{s/.*: //;s/([^)]*)//g;s/ CPU.*//;s/  */ /g;p;q}' /proc/cpuinfo" },
+        { "type": "cpu", "key": "Cores", "format": "{cores-physical} cores · {cores-logical} threads · {freq-max}" },
+        { "type": "gpu", "key": "Graphics", "format": "{vendor} {name}" },
+        { "type": "memory", "key": "Memory", "format": "{percentage-bar} {percentage>4}  {#90}{used} / {total}" },
+        { "type": "disk", "key": "Disk", "folders": "/", "format": "{size-percentage-bar} {size-percentage>4}  {#90}{size-used} / {size-total}" },
+        "break",
+
+        { "type": "custom", "format": "SOFTWARE{#90}                                       02" },
+        { "type": "custom", "format": "{#90}├─┴─┴─┴─┴" },
+        { "type": "os", "key": "System", "format": "{pretty-name}" },
+        { "type": "command", "key": "Generation", "text": "readlink /nix/var/nix/profiles/system | tr -dc 0-9" },
+        { "type": "kernel", "key": "Kernel", "format": "{sysname} {release}" },
+        { "type": "shell", "key": "Shell", "format": "{pretty-name} {version}" },
+        { "type": "command", "key": "Installed", "text": "b=$(stat -c %W /); echo \"$(date -d @$b '+%-d %b %Y') · $(( ($(date +%s) - b) / 86400 )) days\"" },
+        { "type": "uptime", "key": "Uptime" },
+        "break",
+
+        // The day so far, as the bar's ruler draws it.
+        { "type": "command", "key": " ", "keyWidth": 0, "text": "~/.config/fastfetch/day-ruler.sh" },
+        { "type": "custom", "format": "{#90}00          06          12          18         24" }
+    ]
+}

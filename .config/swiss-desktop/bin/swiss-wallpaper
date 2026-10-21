@@ -1,0 +1,22 @@
+#!/bin/sh
+# Sets the desktop picture of one mode (default: the mode in use) and rebuilds, so the shell's background
+# (build/<mode>/palette.json) and the lock screen (build/<mode>/hyprlock-colors.conf) both follow.
+#   swiss-wallpaper PICTURE [light|dark]
+# The picture must be inside $HOME; tokens/<mode>.env keeps it relative to $HOME (wallpaper=).
+set -eu
+root=$(cd "$(dirname "$0")/.." && pwd)
+[ $# -ge 1 ] || { echo "usage: swiss-wallpaper PICTURE [light|dark]" >&2; exit 2; }
+[ -f "$1" ] || { echo "swiss-wallpaper: no such file: $1" >&2; exit 1; }
+path=$(realpath -- "$1")
+mode=${2:-$(cat "${XDG_STATE_HOME:-$HOME/.local/state}/swiss/mode" 2>/dev/null || echo dark)}
+case $mode in light|dark) ;; *) echo "swiss-wallpaper: mode must be light or dark" >&2; exit 2 ;; esac
+case $path in
+    "$HOME"/*) value=${path#"$HOME"/} ;;
+    *) echo "swiss-wallpaper: the picture must be inside $HOME" >&2; exit 1 ;;
+esac
+# swiss-build substitutes values with sed (s|..|..|), and palette.json takes the path as a JSON string: refuse the
+# characters that would break either.
+case $value in *'|'*|*'&'*|*'\'*|*'"'*) echo "swiss-wallpaper: rename the file: | & \\ and \" are not allowed" >&2; exit 1 ;; esac
+sed -i "s|^wallpaper=.*|wallpaper=$value|" "$root/tokens/$mode.env"
+"$root/bin/swiss-build" > /dev/null
+echo "swiss-wallpaper: $mode mode uses ~/$value"

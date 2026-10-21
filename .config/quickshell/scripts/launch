@@ -1,0 +1,38 @@
+#!/bin/sh
+# launch <id> <name> <command> [args...]: start an app (from the launcher, the dock or scripts/busy-launch) with its
+# output in the journal under <id> (journalctl -t <id>), and say so when it quits with an error in its first 5 s: a
+# notification from <name> with its first error line, and the bar's "starting" mark ended. An app that quits at once
+# shows nothing otherwise (Helium refusing a profile lock left under the old hostname, 20 October 2026).
+#   launch helium Helium helium
+[ "$#" -ge 3 ] || { echo "usage: launch <id> <name> <command> [args...]" >&2; exit 2; }
+id=$1 name=$2; shift 2
+since=$(date +%s)
+systemd-cat -t "$id" --stderr-priority=warning -- "$@" &
+pid=$!
+
+i=0
+while kill -0 "$pid" 2>/dev/null; do
+    [ "$i" -ge 50 ] && exit 0            # still running after 5 s: started
+    sleep 0.1; i=$((i + 1))
+done
+wait "$pid"; code=$?
+[ "$code" -eq 0 ] && exit 0              # quit cleanly: handed over to a running copy, or a tray app
+
+# Its lines reach the journal a moment after it quits. The first that names a failure, else the last; Chromium's
+# "[pid:tid:time:ERROR:file.cc:365] " prefix dropped.
+out="" i=0
+while [ -z "$out" ] && [ "$i" -lt 10 ]; do
+    out=$(journalctl -q -t "$id" --since "@$since" -o cat --no-pager 2>/dev/null)
+    [ -n "$out" ] || { sleep 0.1; i=$((i + 1)); }
+done
+line=$(printf '%s\n' "$out" | grep -i -m1 -E 'error|fatal|cannot|can.t|failed|denied|not found|no such')
+[ -n "$line" ] || line=$(printf '%s\n' "$out" | grep . | tail -n 1)
+line=$(printf '%s' "$line" | sed 's/^\[[^]]*\] *//' | cut -c1-300)
+[ "$code" -gt 128 ] && how="killed by signal $((code - 128))" || how="exit $code"
+
+qs ipc call busy launchFailed "$id" > /dev/null 2>&1
+# `--` ends busctl's options, so the expiry -1 (the server's default) is not read as one.
+busctl --user -- call org.freedesktop.Notifications /org/freedesktop/Notifications org.freedesktop.Notifications \
+    Notify 'susssasa{sv}i' "$name" 0 "" "$name did not start" "${line:+$line
+}$how · journalctl -t $id" 0 0 -1 > /dev/null 2>&1
+exit 0

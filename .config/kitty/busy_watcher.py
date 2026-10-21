@@ -1,0 +1,1 @@
+../quickshell/scripts/busy_watcher.py

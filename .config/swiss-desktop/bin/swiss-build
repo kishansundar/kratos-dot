@@ -1,0 +1,69 @@
+#!/bin/sh
+# Generates every app's colour file from tokens/{light,dark}.env.
+#   templates/mode/*  -> build/light/* and build/dark/*   (@name@ is replaced by that mode's value)
+#   templates/both/*  -> build/*                          (@light.name@ and @dark.name@ are both available)
+# Run after editing a token or template; swiss-mode only switches between the files built here.
+set -eu
+root=$(cd "$(dirname "$0")/.." && pwd)
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+# Each token line "name=value" becomes a sed rule; $2 is the prefix ("" or "light." / "dark.").
+rules() {
+    grep -E '^[a-z0-9_]+=' "$1" | while IFS='=' read -r k v; do
+        printf 's|@%s%s@|%s|g\n' "$2" "$k" "$v"
+    done
+}
+
+# Fill template $2 with the rules in $1 and replace $3 in one step (a rename), so a program watching $3 (the
+# shell reloads palette.json when it changes) never reads it half-written.
+put() { sed -f "$1" "$2" > "$3.tmp" && mv -f "$3.tmp" "$3"; }
+
+# @home@: this user's home, for files that need absolute paths (hyprlock).
+printf 's|@home@|%s|g\n' "$HOME" > "$tmp/home.sed"
+
+for mode in light dark; do
+    rules "$root/tokens/$mode.env" "" > "$tmp/$mode.sed"
+    cat "$tmp/home.sed" >> "$tmp/$mode.sed"
+    rules "$root/tokens/$mode.env" "$mode." >> "$tmp/both.sed"
+    mkdir -p "$root/build/$mode"
+    for t in "$root"/templates/mode/*; do
+        put "$tmp/$mode.sed" "$t" "$root/build/$mode/$(basename "$t")"
+    done
+done
+for t in "$root"/templates/both/*; do
+    put "$tmp/both.sed" "$t" "$root/build/$(basename "$t")"
+done
+
+# The lock screen cannot draw SVG: rasterize the mark (128 px) when ImageMagick is at hand; otherwise the PNGs
+# already in build/ (committed) stay, which is fine until the palette's ink or red changes.
+if command -v magick >/dev/null 2>&1; then
+    for mode in light dark; do
+        magick -background none -density 384 "$root/build/$mode/logo.svg" -resize 128x128 "png:$root/build/$mode/logo.png.tmp" \
+            && mv -f "$root/build/$mode/logo.png.tmp" "$root/build/$mode/logo.png"
+    done
+else
+    echo "swiss-build: ImageMagick not found; kept build/*/logo.png as they were" >&2
+fi
+
+# A placeholder left over means a template names a token that does not exist.
+if grep -rnE '@[a-z0-9_.]+@' "$root/build"; then
+    echo "swiss-build: unknown token(s) above" >&2
+    exit 1
+fi
+
+# NixOS reads the boot menu and console colours from its own tree (so it builds without this folder): copy them
+# there when that tree is here. They apply on the next nixos-rebuild.
+nixos_modules=${SWISS_NIXOS_MODULES:-$HOME/nixos/modules}
+if [ -d "$nixos_modules" ]; then
+    cp "$root/build/swiss-colors.nix" "$nixos_modules/swiss-colors.nix.tmp" \
+        && mv -f "$nixos_modules/swiss-colors.nix.tmp" "$nixos_modules/swiss-colors.nix"
+fi
+echo "swiss-build: built $(find "$root/build" -type f | wc -l) files"
+
+# mango reads its colours through build/current, which its file watch does not follow: reload it so new border colours
+# apply at once (swiss-mode does the same after a switch). Only inside the session, where MANGO_INSTANCE_SIGNATURE is
+# set and answers; from elsewhere (SSH) it is left alone rather than guessing a socket, which could be a test rig's.
+if [ -n "${MANGO_INSTANCE_SIGNATURE:-}" ] && mmsg get version >/dev/null 2>&1; then
+    mmsg dispatch reload_config >/dev/null || echo "swiss-build: mango reload failed" >&2
+fi

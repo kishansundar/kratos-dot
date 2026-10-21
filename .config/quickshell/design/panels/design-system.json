@@ -1,0 +1,20 @@
+{
+  "v": 3,
+  "layout": "files",
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-15T08:44:54Z"
+  },
+  "title": "Quickshell Panels",
+  "namespace": "QSPanels",
+  "libraries": [],
+  "sections": {},
+  "groups": [],
+  "assetGroups": {},
+  "blobs": {},
+  "docs": {
+    "readme": "project/README.md",
+    "sections": []
+  },
+  "lastChange": "Popup shell and control-centre Tile moved in from Quickshell Swiss; player and dashboard stay separate"
+}

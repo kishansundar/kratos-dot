@@ -1,0 +1,206 @@
+/* Quickshell Swiss Dashboard — HTML recreation of the QML overlay. Every value is a token. */
+
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+* { box-sizing: border-box; }
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+.caps { text-transform: uppercase; }
+.muted { color: var(--textMuted); }
+.faint { color: var(--textFaint); }
+.w600 { font-weight: 600; }
+.mono { font-family: var(--font-mono); }
+.ic { font-family: var(--font-icon); font-size: var(--iconBar); line-height: 1; height: var(--iconBar); display: inline-block; vertical-align: middle; }
+
+/* Marks inherited from Quickshell Swiss */
+.ci { display: inline-block; width: var(--markCircle); height: var(--markCircle); border-radius: var(--radiusCircle); background: var(--text); flex: none; }
+.ci.off { background: transparent; box-shadow: inset 0 0 0 var(--marker) var(--text); }
+.tri { display: inline-block; width: var(--markTriangle); height: var(--markTriangle); background: var(--text); clip-path: polygon(50% 0, 100% 100%, 0 100%); flex: none; }
+.err { color: var(--error); }
+
+/* Ruler (heading) */
+.ruler { width: calc(var(--rulerShort) + var(--tickW)); height: var(--tickMajor);
+  background:
+    linear-gradient(var(--tick), var(--tick)) left bottom / 100% var(--tickW) no-repeat,
+    linear-gradient(var(--tick), var(--tick)) left bottom / var(--tickW) var(--tickMajor) no-repeat,
+    repeating-linear-gradient(to right, var(--tick) 0 var(--tickW), transparent var(--tickW) var(--rulerPitch)) left bottom / 100% var(--tickMinor) no-repeat; }
+
+/* Overlay grid and sections: space, not boxes */
+.dash { padding: var(--dashMargin); display: grid; grid-template-columns: repeat(var(--dashColumns), minmax(0, 1fr)); column-gap: var(--dashGutter); row-gap: var(--sectionGap); }
+.sec { min-width: 0; }
+.sec.c3 { grid-column: span 3; } .sec.c4 { grid-column: span 4; } .sec.c6 { grid-column: span 6; } .sec.c8 { grid-column: span 8; } .sec.c12 { grid-column: span 12; }
+.sechead { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s4); margin-bottom: var(--s4); }
+.sechead .ruler { margin-top: var(--s1); }
+.stage { padding: var(--s5); display: flex; flex-direction: column; gap: var(--s5); align-items: stretch; }
+
+/* Stat tiles */
+.stile { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: var(--s1) var(--s4); }
+.stile .lab { grid-column: 1 / -1; color: var(--textMuted); }
+.stile .val { white-space: nowrap; }
+.stile .unit { color: var(--textMuted); margin-left: var(--s1); }
+.stile .meta { grid-column: 1 / -1; color: var(--textMuted); }
+.statrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(calc(var(--sparkW) * 2), 1fr)); gap: var(--dashGutter); }
+
+/* Charts (SVG). Strokes and fills come from tokens via CSS so theme switches repaint. */
+.chart { position: relative; margin-top: var(--s6); margin-bottom: var(--s5); }
+.ylab .unit { fill: var(--textFaint); }
+.chart svg { display: block; overflow: visible; }
+.grid line { stroke: var(--line); stroke-width: var(--tickW); shape-rendering: crispEdges; }
+.axis line, .axis rect { fill: var(--tick); stroke: none; shape-rendering: crispEdges; }
+.axis text, .ylab text { fill: var(--textFaint); font-family: var(--font-mono); }
+.s-ink { stroke: var(--text); } .s-1 { stroke: var(--series1); } .s-2 { stroke: var(--series2); } .s-3 { stroke: var(--series3); } .s-4 { stroke: var(--series4); }
+.f-ink { fill: var(--text); } .f-1 { fill: var(--series1); } .f-2 { fill: var(--series2); } .f-3 { fill: var(--series3); } .f-4 { fill: var(--series4); }
+.w-ink { fill: var(--inkWash); } .w-1 { fill: var(--series1Wash); }
+.faintline { stroke: var(--textFaint); }
+.line { fill: none; stroke-width: var(--strokeData); stroke-linejoin: round; stroke-linecap: round; }
+.dot { stroke: var(--bg); stroke-width: var(--marker); }
+.cross { stroke: var(--textMuted); stroke-width: var(--tickW); shape-rendering: crispEdges; }
+.endlab { fill: var(--textMuted); }
+.tip { position: absolute; pointer-events: none; width: var(--tipW); background: var(--surface); border: var(--rule) solid var(--line); padding: var(--s2) var(--s3); display: none; z-index: 2; }
+.tip .row { display: flex; align-items: center; gap: var(--s2); }
+.tip .row .v { margin-left: auto; }
+.key { display: inline-block; width: var(--s3); height: var(--strokeData); background: currentColor; flex: none; }
+.legend { display: flex; gap: var(--s4); flex-wrap: wrap; color: var(--textMuted); margin-bottom: var(--s2); }
+.legend span { display: inline-flex; align-items: center; gap: var(--s2); }
+
+/* Core strip */
+.cores { display: flex; gap: var(--marker); }
+.cores .cell { width: var(--coreCell); height: var(--coreCell); position: relative; }
+.cores.lbl { display: flex; gap: var(--marker); margin-top: var(--s1); }
+.cores.lbl span { width: var(--coreCell); text-align: center; color: var(--textFaint); }
+
+/* Meter (ruler meter from Quickshell Swiss) */
+.meter { position: relative; height: var(--tickValue); }
+.meter::before { content: ""; position: absolute; left: 0; right: 0; bottom: var(--rule); height: var(--tickW); background: var(--tick); }
+.meter::after { content: ""; position: absolute; left: 0; bottom: var(--rule); width: var(--tickW); height: var(--tickMajor); background: var(--tick); }
+.meter .fill { position: absolute; left: 0; bottom: 0; height: var(--rulerFill); background: var(--text); z-index: 1; }
+.meter .val { position: absolute; bottom: 0; width: var(--marker); height: var(--tickValue); background: var(--text); margin-left: calc(var(--marker) / -2); z-index: 1; }
+.meter .thr { position: absolute; bottom: var(--rule); width: var(--tickW); height: var(--tickMajor); background: var(--textMuted); }
+.meter .flag { position: absolute; bottom: calc(var(--tickValue) + var(--rule)); margin-left: calc(var(--markTriangle) / -2); z-index: 1; }
+.meter.crit .fill, .meter.crit .val { background: var(--error); }
+.meterrow { display: grid; grid-template-columns: 1fr auto; row-gap: var(--s1); }
+.meterrow .meter { grid-column: 1 / -1; }
+.meterrow + .meterrow { margin-top: var(--s4); }
+
+/* Tables and lists */
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl th { text-align: left; font-weight: 500; color: var(--textMuted); height: var(--tableRow); border-bottom: var(--rule) solid var(--line); cursor: pointer; white-space: nowrap; }
+.tbl th.r, .tbl td.r { text-align: right; padding-left: var(--s5); }
+.tbl th[aria-sort] { color: var(--text); }
+.tbl td { height: var(--tableRow); border-bottom: var(--rule) solid var(--line); white-space: nowrap; }
+.tbl tr:hover td { background: var(--surfaceAlt); }
+.tbl td.name { max-width: 0; width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.list { display: flex; flex-direction: column; }
+.li { display: flex; align-items: center; gap: var(--s3); height: var(--tableRow); border-bottom: var(--rule) solid var(--line); }
+.li .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Temperature ruler: 20–100 °C, ticks every 5, labels every 10, threshold ticks */
+.thermo .meter { height: var(--tickValue); }
+.thermo .scale { position: absolute; left: 0; right: 0; bottom: var(--rule); height: var(--tickMajor);
+  background:
+    linear-gradient(var(--tick), var(--tick)) right bottom / var(--tickW) var(--tickMajor) no-repeat,
+    linear-gradient(to right, var(--tick) 0 var(--tickW), transparent var(--tickW)) 0 100% / 12.5% var(--tickMajor) repeat-x,
+    linear-gradient(to right, var(--tick) 0 var(--tickW), transparent var(--tickW)) 0 100% / 6.25% var(--tickMinor) repeat-x; }
+.thermo .thr { height: var(--tickValue); background: var(--textMuted); width: var(--tickW); }
+.thermo .nums { position: relative; height: var(--s4); margin-top: var(--s1); }
+.thermo .nums span { position: absolute; transform: translateX(-50%); color: var(--textFaint); }
+.state { display: inline-flex; align-items: center; gap: var(--s1); }
+
+/* Controls: a switch block per feature, options beneath. On = ink fill (inverted) + filled circle; off = 1px line border + ring. */
+.ctls { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--dashGutter); }
+.ctl .sw { width: 100%; height: var(--controlH); grid-template-rows: auto 1fr auto; border: var(--rule) solid var(--line); background: transparent; color: var(--text); font: inherit;
+  display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto 1fr auto; padding: var(--s3); text-align: left; cursor: pointer;
+  transition: background-color var(--durFast) var(--easeOut), color var(--durFast) var(--easeOut); }
+.ctl .sw:hover { background: var(--surfaceAlt); }
+.ctl .sw:focus-visible { outline: var(--marker) solid var(--accent); outline-offset: calc(var(--marker) * -1); }
+.ctl .sw .name { grid-column: 1; grid-row: 3; }
+.ctl .sw .word { grid-column: 2; grid-row: 3; align-self: end; }
+.ctl .sw .ci { grid-column: 2; grid-row: 1; }
+.ctl .sw.on { border-color: var(--text); box-shadow: inset 0 calc(var(--marker) * -1) 0 var(--text); } /* on = ink border + 2px ink base, never a filled block */
+.ctl .sw.on .ci { background: var(--text); }
+.ctl .sw.on .muted { color: var(--text); }
+.ctl .opts { margin-top: var(--s3); display: flex; flex-direction: column; gap: var(--s2); }
+.tog { display: inline-flex; align-items: center; gap: var(--s2); background: transparent; border: 0; color: inherit; font-family: var(--font-sans); padding: 0; min-height: var(--hitTarget); cursor: pointer; }
+.seg { display: flex; gap: var(--s1); }
+.seg button { background: transparent; border: 0; color: var(--textMuted); font: inherit; min-height: var(--hitTarget); min-width: var(--hitTarget); padding: 0 var(--s2); cursor: pointer; }
+.seg button[aria-pressed="true"] { color: var(--text); box-shadow: inset 0 calc(var(--marker) * -1) 0 var(--text); }
+.ctl .meter .scale { position: absolute; left: 0; right: 0; bottom: var(--rule); height: var(--tickMajor);
+  background:
+    linear-gradient(var(--tick), var(--tick)) right bottom / var(--tickW) var(--tickMajor) no-repeat,
+    linear-gradient(to right, var(--tick) 0 var(--tickW), transparent var(--tickW)) 0 100% / 12.5% var(--tickMajor) repeat-x,
+    linear-gradient(to right, var(--tick) 0 var(--tickW), transparent var(--tickW)) 0 100% / 2.5% var(--tickMinor) repeat-x; }
+
+/* Panel: hung from the bar rule, centred, 1152 wide. Not full screen. */
+.dashp { width: var(--dashWidth); margin: 0 auto; background: var(--surface); border: var(--rule) solid var(--line); border-top: 0; }
+.dashp .dash { padding: var(--dashMargin); }
+.dashp .dot { stroke: var(--surface); }
+.stage-bar { background: var(--bg); min-height: 100%; }
+.dbar { height: var(--barHeight); border-bottom: var(--rule) solid var(--line); display: flex; align-items: center; justify-content: center; gap: var(--s2); background: var(--bg); }
+.dbar .sep { width: var(--marker); height: var(--tickValue); background: var(--text); }
+.hdmark { position: relative; display: inline-block; width: var(--iconBar); height: var(--iconBar); }
+.hdmark .ic { position: absolute; left: 0; top: 0; }
+.stile .spark { width: var(--sparkW); height: var(--sparkH); }
+.stile .spark { grid-column: 1 / -1; }
+.ctl .sw .ci { justify-self: end; }
+/* Stat row: labels, values and metadata share lines whatever the value size or sparkline */
+.statgrid { align-items: stretch !important; }
+.statgrid .stile { grid-template-rows: auto 1fr auto auto; height: 100%; }
+.statgrid .stile .val { align-self: end; }
+.statgrid .stile .nospark { grid-column: 1 / -1; height: var(--sparkH); }
+
+/* ===== Dashboard v2: an instrument sheet on ONE grid. 1104px content = 4 × dashCol (258) + 3 × dashGutter (24).
+   Every vertical edge in the panel falls on that grid; every lower-band row is listRow (32) so rows align across columns. ===== */
+.dv2 { width: var(--dashWidth); background: var(--surface); border: var(--rule) solid var(--line); padding: var(--dashMargin); }
+.dv2 .dot { stroke: var(--surface); }
+.screen { background: var(--bg); min-height: 1080px; display: flex; flex-direction: column; }
+.screen .mid { flex: 1; display: flex; align-items: center; justify-content: center; padding: var(--s7) 0; }
+.dv2 .top { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: var(--s5); }
+.dv2 .top .who { display: flex; align-items: center; gap: var(--s3); }
+.dv2 .hdmark { position: relative; display: inline-block; width: var(--iconBar); height: var(--iconBar); }
+.dv2 .hdmark .ic { position: absolute; left: 0; top: 0; }
+/* one heading style for every group: caps eyebrow on a 1px ink rule, scale/metadata at the right */
+.dv2 .eb { display: flex; justify-content: space-between; align-items: flex-end; height: var(--hitTarget); padding-bottom: var(--s1); border-bottom: var(--rule) solid var(--text); color: var(--text); }
+.dv2 .eb .mono { color: var(--textMuted); text-transform: none; letter-spacing: 0; }
+.dv2 .grp + .grp { margin-top: var(--s4); }
+/* vitals: 4 cells per row = the 4 grid columns; cells after the first carry the gutter as left padding so row rules run unbroken */
+.dv2 .vr { display: grid; grid-template-columns: var(--dashCol) repeat(3, calc(var(--dashCol) + var(--dashGutter))); height: var(--vitalRowH); border-bottom: var(--rule) solid var(--line); }
+.dv2 .vr > * { display: flex; align-items: center; min-width: 0; }
+.dv2 .vr > * + * { padding-left: var(--dashGutter); }
+.dv2 .vr .lv { justify-content: space-between; }
+.dv2 .vr .lv .v { display: inline-flex; align-items: baseline; gap: var(--s1); }
+.dv2 .vr .lv .num20 { font-weight: 600; font-size: 20px; line-height: 24px; letter-spacing: -0.01em; }
+.dv2 .vr .lv .u { color: var(--textMuted); }
+.dv2 .vr .rl { position: relative; }
+.dv2 .vr .rl .meter { width: 100%; }
+.dv2 .vr .sp svg { display: block; }
+.dv2 .vr .m { color: var(--textMuted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dv2 .vr.warn .m { color: var(--text); }
+.dv2 .vr.crit .num20, .dv2 .vr.crit .m { color: var(--error); }
+.dv2 .vr.crit .meter .fill, .dv2 .vr.crit .meter .val { background: var(--error); }
+.dv2 .scale10 { position: absolute; left: 0; right: 0; bottom: var(--rule); height: var(--tickMajor);
+  background: linear-gradient(var(--tick), var(--tick)) right bottom / var(--tickW) var(--tickMajor) no-repeat,
+    linear-gradient(to right, var(--tick) 0 var(--tickW), transparent var(--tickW)) 0 100% / 50% var(--tickMajor) repeat-x,
+    linear-gradient(to right, var(--tick) 0 var(--tickW), transparent var(--tickW)) 0 100% / 10% var(--tickMinor) repeat-x; }
+/* threads: 12 ink bars on a baseline, height = load (the tag-ruler idea), no colour */
+.dv2 .bars { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--s1); align-items: end; width: 100%; height: var(--tickValue); border-bottom: var(--rule) solid var(--tick); }
+.dv2 .bars i { display: block; background: var(--text); min-height: var(--rule); }
+/* lower band: four dashCol columns, rows of listRow */
+.dv2 .lower { display: grid; grid-template-columns: repeat(var(--bandCols), var(--dashCol)); column-gap: var(--dashGutter); align-items: start; margin-top: var(--sectionGap); }
+.dv2 .hr { display: flex; height: var(--listRow); align-items: center; border-bottom: var(--rule) solid var(--line); gap: var(--s2); color: var(--textMuted); }
+.dv2 .rw { display: flex; height: var(--listRow); align-items: center; border-bottom: var(--rule) solid var(--line); gap: var(--s2); min-width: 0; }
+.dv2 .rw .g { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dv2 .rw .x, .dv2 .hr .x { white-space: nowrap; text-align: right; }
+.dv2 .rw .x { color: var(--textMuted); }
+.dv2 .rw .n { width: calc(var(--s7) + var(--s2)); text-align: right; white-space: nowrap; }
+.dv2 .rw:hover { background: var(--surfaceAlt); }
+.dv2 .rw .meter { flex: 1; height: var(--tickValue); }
+.dv2 .rw.sub { color: var(--textMuted); }
+.dv2 .rw.on .g { font-weight: 600; }
+.dv2 .rw.off { color: var(--textMuted); }
+.dv2 .seg2 { display: flex; gap: var(--s2); }
+.dv2 .seg2 button { background: transparent; border: 0; color: var(--textMuted); font: inherit; height: var(--s5); padding: 0 var(--s1); cursor: pointer; }
+.dv2 .seg2 button[aria-pressed="true"] { color: var(--text); box-shadow: inset 0 calc(var(--marker) * -1) 0 var(--text); }
+.dv2 .ind { padding-left: calc(var(--markCircle) + var(--s2)); }
+.dbar { height: var(--barHeight); border-bottom: var(--rule) solid var(--line); display: flex; align-items: center; justify-content: center; gap: var(--s2); background: var(--bg); }
+.dbar .sep { width: var(--marker); height: var(--tickValue); background: var(--text); }
+.dv2 .hr .g { flex: 1; min-width: 0; }
+.dv2 .hr .n { width: calc(var(--s7) + var(--s2)); text-align: right; }

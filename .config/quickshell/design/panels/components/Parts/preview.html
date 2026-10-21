@@ -1,0 +1,8 @@
+<!-- @dsCard group="Parts" height=320 subtitle="Shared parts: switch, row, text field, battery mini-meter" -->
+<div class="stage" style="max-width:var(--popupWidth)">
+  <div style="display:flex;gap:var(--s2)"><button class="sw2 label" role="switch" aria-checked="true"><span class="ci"></span>on</button><button class="sw2 label" role="switch" aria-checked="false"><span class="ci off"></span>off</button></div>
+  <div style="width:100%"><button class="prow body"><span class="ci"></span><span class="grow">Selected row</span><span class="trail"><span class="ic ">&#xE00A;</span></span></button><button class="prow body"><span class="ci off"></span><span class="grow">Unselected row</span><span class="trail"><span class="mono label">saved</span></span></button><button class="prow body busy"><span class="ci off"></span><span class="grow">Working row</span><span class="trail"></span></button></div>
+  <input class="field label" placeholder="text field" aria-label="example field" style="max-width:var(--popupWidth)">
+  <input class="field label bad" value="bad value" aria-label="field with error" style="max-width:var(--popupWidth)"><div class="msg label err"><span class="ic ">&#xE01A;</span>message with the error glyph</div>
+  <span style="display:flex;gap:var(--s2);align-items:center"><span class="mini"><span style="width:80%"></span></span><span class="mono label">80 %</span></span>
+</div>

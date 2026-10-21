@@ -1,0 +1,374 @@
+{
+  "v": 3,
+  "layout": "files",
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-14T20:14:50Z"
+  },
+  "title": "Quickshell Swiss",
+  "namespace": "QuickshellSwiss",
+  "libraries": [],
+  "sections": {},
+  "groups": [
+    "Icons"
+  ],
+  "assetGroups": {
+    "Icons": {
+      "name": "Icons",
+      "tile": "s",
+      "order": [
+        "volume-mute.svg",
+        "volume-0.svg",
+        "volume-1.svg",
+        "volume-2.svg",
+        "mic.svg",
+        "mic-off.svg",
+        "wifi-0.svg",
+        "wifi-1.svg",
+        "wifi-2.svg",
+        "wifi-3.svg",
+        "wifi-4.svg",
+        "wifi-off.svg",
+        "lan.svg",
+        "lan-off.svg",
+        "bluetooth.svg",
+        "bluetooth-connected.svg",
+        "bluetooth-off.svg",
+        "bell.svg",
+        "bell-off.svg",
+        "theme.svg",
+        "play.svg",
+        "pause.svg",
+        "next.svg",
+        "prev.svg",
+        "close.svg",
+        "check.svg",
+        "error.svg",
+        "warning.svg",
+        "chevron-left.svg",
+        "chevron-right.svg",
+        "chevron-up.svg",
+        "chevron-down.svg",
+        "lock.svg",
+        "calendar.svg",
+        "more.svg",
+        "search.svg",
+        "headphones.svg",
+        "display.svg",
+        "music.svg",
+        "plus.svg",
+        "minus.svg",
+        "awake.svg",
+        "awake-off.svg",
+        "agent.svg",
+        "nixos.svg",
+        "nixos-a.svg",
+        "nixos-b.svg",
+        "night.svg",
+        "power.svg"
+      ],
+      "files": {
+        "volume-mute.svg": {
+          "name": "volume-mute.svg",
+          "blob": "6dbb109c720309a308c6ca4509bec8d7",
+          "size": 389,
+          "type": "image/svg+xml"
+        },
+        "volume-0.svg": {
+          "name": "volume-0.svg",
+          "blob": "d6919b5600192caf2d6af021a23ca98b",
+          "size": 199,
+          "type": "image/svg+xml"
+        },
+        "volume-1.svg": {
+          "name": "volume-1.svg",
+          "blob": "f62863293b1da523caee443f3ad0394a",
+          "size": 225,
+          "type": "image/svg+xml"
+        },
+        "volume-2.svg": {
+          "name": "volume-2.svg",
+          "blob": "c32c9a9425c03f16803df907410f81a7",
+          "size": 251,
+          "type": "image/svg+xml"
+        },
+        "mic.svg": {
+          "name": "mic.svg",
+          "blob": "07c6a91786c005675e645622ba5e30d7",
+          "size": 312,
+          "type": "image/svg+xml"
+        },
+        "mic-off.svg": {
+          "name": "mic-off.svg",
+          "blob": "c64bdee256f1fcdda0a6fa14e16584da",
+          "size": 436,
+          "type": "image/svg+xml"
+        },
+        "wifi-0.svg": {
+          "name": "wifi-0.svg",
+          "blob": "e98ac1110987fee540ad14050bbbffb6",
+          "size": 360,
+          "type": "image/svg+xml"
+        },
+        "wifi-1.svg": {
+          "name": "wifi-1.svg",
+          "blob": "c886ce9ba0c53d0c41949e127616c074",
+          "size": 336,
+          "type": "image/svg+xml"
+        },
+        "wifi-2.svg": {
+          "name": "wifi-2.svg",
+          "blob": "2be806ebedb4a367abba38efc92852be",
+          "size": 314,
+          "type": "image/svg+xml"
+        },
+        "wifi-3.svg": {
+          "name": "wifi-3.svg",
+          "blob": "1764e92035a54ea21be30a122276d0c9",
+          "size": 288,
+          "type": "image/svg+xml"
+        },
+        "wifi-4.svg": {
+          "name": "wifi-4.svg",
+          "blob": "e3d50b5fba4a7e1ce50bfa2de9205a14",
+          "size": 262,
+          "type": "image/svg+xml"
+        },
+        "wifi-off.svg": {
+          "name": "wifi-off.svg",
+          "blob": "3f840a7a21cb237a735d9416067c1e5e",
+          "size": 554,
+          "type": "image/svg+xml"
+        },
+        "lan.svg": {
+          "name": "lan.svg",
+          "blob": "2f27642c900318c9d4d33db6d0e9b8f7",
+          "size": 319,
+          "type": "image/svg+xml"
+        },
+        "lan-off.svg": {
+          "name": "lan-off.svg",
+          "blob": "52945fb715c1fab52a796cb8c7614603",
+          "size": 450,
+          "type": "image/svg+xml"
+        },
+        "bluetooth.svg": {
+          "name": "bluetooth.svg",
+          "blob": "32e57fcffc6fa88db54e561dc240f065",
+          "size": 408,
+          "type": "image/svg+xml"
+        },
+        "bluetooth-connected.svg": {
+          "name": "bluetooth-connected.svg",
+          "blob": "7915fc7cd4f02bd00940889739aff7a7",
+          "size": 452,
+          "type": "image/svg+xml"
+        },
+        "bluetooth-off.svg": {
+          "name": "bluetooth-off.svg",
+          "blob": "aaeb88e2c9149b923edfd86e6ad93584",
+          "size": 464,
+          "type": "image/svg+xml"
+        },
+        "bell.svg": {
+          "name": "bell.svg",
+          "blob": "f34b8b1e9b9a3115187b6de745301316",
+          "size": 262,
+          "type": "image/svg+xml"
+        },
+        "bell-off.svg": {
+          "name": "bell-off.svg",
+          "blob": "062ba196fd29a8e7e4e6788bb11eeccb",
+          "size": 352,
+          "type": "image/svg+xml"
+        },
+        "theme.svg": {
+          "name": "theme.svg",
+          "blob": "14a211395fad717cf455d66be00d252b",
+          "size": 223,
+          "type": "image/svg+xml"
+        },
+        "play.svg": {
+          "name": "play.svg",
+          "blob": "b4f62dfb5f425af137baca5527b65963",
+          "size": 183,
+          "type": "image/svg+xml"
+        },
+        "pause.svg": {
+          "name": "pause.svg",
+          "blob": "b882df0b01d5b9adef572f9904b18fb1",
+          "size": 214,
+          "type": "image/svg+xml"
+        },
+        "next.svg": {
+          "name": "next.svg",
+          "blob": "ec865cad6c0bb45484d9a7ef362adbbd",
+          "size": 209,
+          "type": "image/svg+xml"
+        },
+        "prev.svg": {
+          "name": "prev.svg",
+          "blob": "9a4359be50489d80e9a532eabb2c87dc",
+          "size": 206,
+          "type": "image/svg+xml"
+        },
+        "close.svg": {
+          "name": "close.svg",
+          "blob": "92c007ec48d6af5662d52ae40f48b782",
+          "size": 346,
+          "type": "image/svg+xml"
+        },
+        "check.svg": {
+          "name": "check.svg",
+          "blob": "2e8d4b69eb196eac403a77c1a41fa376",
+          "size": 256,
+          "type": "image/svg+xml"
+        },
+        "error.svg": {
+          "name": "error.svg",
+          "blob": "581219907b52317ead55f9f9783d7c6e",
+          "size": 236,
+          "type": "image/svg+xml"
+        },
+        "warning.svg": {
+          "name": "warning.svg",
+          "blob": "c86562542cc3087b46093810f12fa4ae",
+          "size": 230,
+          "type": "image/svg+xml"
+        },
+        "chevron-left.svg": {
+          "name": "chevron-left.svg",
+          "blob": "abb691d63ea441633237204e73a8134a",
+          "size": 256,
+          "type": "image/svg+xml"
+        },
+        "chevron-right.svg": {
+          "name": "chevron-right.svg",
+          "blob": "35945496d7ca8629f3669080047a5fb2",
+          "size": 256,
+          "type": "image/svg+xml"
+        },
+        "chevron-up.svg": {
+          "name": "chevron-up.svg",
+          "blob": "8021f0fb65ab59819fbbb907c883684a",
+          "size": 256,
+          "type": "image/svg+xml"
+        },
+        "chevron-down.svg": {
+          "name": "chevron-down.svg",
+          "blob": "7df394e688eadd5e9a2f62b256b0985d",
+          "size": 256,
+          "type": "image/svg+xml"
+        },
+        "lock.svg": {
+          "name": "lock.svg",
+          "blob": "fe0d6a345e1faef93132a9a8dc3137a2",
+          "size": 258,
+          "type": "image/svg+xml"
+        },
+        "calendar.svg": {
+          "name": "calendar.svg",
+          "blob": "dbd625e537368ac2803f6cdf25ddc356",
+          "size": 269,
+          "type": "image/svg+xml"
+        },
+        "more.svg": {
+          "name": "more.svg",
+          "blob": "eb9067eb60e7bc120325e3c7cac7f5a2",
+          "size": 230,
+          "type": "image/svg+xml"
+        },
+        "search.svg": {
+          "name": "search.svg",
+          "blob": "904ca47481a77ab72df27dc8c36d9e7a",
+          "size": 261,
+          "type": "image/svg+xml"
+        },
+        "headphones.svg": {
+          "name": "headphones.svg",
+          "blob": "393b705d53fa136ed31625e08a10e86e",
+          "size": 258,
+          "type": "image/svg+xml"
+        },
+        "display.svg": {
+          "name": "display.svg",
+          "blob": "5a5d77035ced143237440f0f79e40918",
+          "size": 262,
+          "type": "image/svg+xml"
+        },
+        "music.svg": {
+          "name": "music.svg",
+          "blob": "5995d3ff11bfb9501bade52a9d718b1e",
+          "size": 239,
+          "type": "image/svg+xml"
+        },
+        "plus.svg": {
+          "name": "plus.svg",
+          "blob": "a85c1926d1dd1ac5e38bca5456f6fd29",
+          "size": 230,
+          "type": "image/svg+xml"
+        },
+        "minus.svg": {
+          "name": "minus.svg",
+          "blob": "a0cddea9f2b6296fc2295a3a7e717c6f",
+          "size": 188,
+          "type": "image/svg+xml"
+        },
+        "awake.svg": {
+          "name": "awake.svg",
+          "blob": "5710cf21992bd587a09e0a41d4fb1166",
+          "size": 237,
+          "type": "image/svg+xml"
+        },
+        "awake-off.svg": {
+          "name": "awake-off.svg",
+          "blob": "151f80b602dee36795d9a3f0519c1d3b",
+          "size": 224,
+          "type": "image/svg+xml"
+        },
+        "agent.svg": {
+          "name": "agent.svg",
+          "blob": "28a0989f809604f92dc280d23d9cb760",
+          "size": 283,
+          "type": "image/svg+xml"
+        },
+        "nixos.svg": {
+          "name": "nixos.svg",
+          "blob": "6f0767f33d2327def7c3604e6c00f08c",
+          "size": 864,
+          "type": "image/svg+xml"
+        },
+        "nixos-a.svg": {
+          "name": "nixos-a.svg",
+          "blob": "74c7006a4343b76504a904e72c27f461",
+          "size": 498,
+          "type": "image/svg+xml"
+        },
+        "nixos-b.svg": {
+          "name": "nixos-b.svg",
+          "blob": "6c2779e11362ada65906626b9c49b295",
+          "size": 503,
+          "type": "image/svg+xml"
+        },
+        "night.svg": {
+          "name": "night.svg",
+          "blob": "0202b302ba6a63d913885b326d715b14",
+          "size": 2098,
+          "type": "image/svg+xml"
+        },
+        "power.svg": {
+          "name": "power.svg",
+          "blob": "ab0cb1dea79d1c542ae86efe84178400",
+          "size": 3217,
+          "type": "image/svg+xml"
+        }
+      }
+    }
+  },
+  "blobs": {},
+  "docs": {
+    "readme": "project/README.md",
+    "sections": []
+  },
+  "lastChange": "Popup, Tile moved to Quickshell Panels; Calendar superseded by Panels' DateTimePanel"
+}

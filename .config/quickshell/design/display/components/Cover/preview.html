@@ -1,0 +1,25 @@
+<!-- @dsCard height=288 -->
+<style>
+  .cv { position: relative; width: 960px; height: 288px; background: var(--bg); overflow: hidden; }
+  .cv svg { position: absolute; left: 0; top: 0; }
+  .ink { fill: var(--text); } .acc { fill: var(--accent); } .alt { fill: var(--surfaceAlt); } .tk { fill: var(--tick); } .ft { fill: var(--textFaint); }
+  .tb { position: absolute; left: var(--s5); bottom: var(--s5); max-width: 440px; }
+  .nm { font-family: var(--font-display); font-weight: 700; font-size: 96px; line-height: 0.95; letter-spacing: -0.02em; color: var(--text); margin: 0; }
+  .tg { font-family: var(--font-sans); font-size: 14px; line-height: 20px; color: var(--textMuted); margin: var(--s2) 0 0; }
+</style>
+<div class="cv">
+  <!-- a monitor face as a block (ink 288×168, surfaceAlt screen inset), a brightness ruler across its foot: confirmed fill to 47 %, faint tick at 47, pending handle at 70 -->
+  <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+    <rect class="alt" x="576" y="24" width="336" height="192"/>
+    <rect class="ink" x="600" y="48" width="141" height="144"/>
+    <rect class="acc" x="888" y="24" width="24" height="24"/>
+    <rect class="tk" x="576" y="263" width="336" height="1"/>
+    <g class="tk">
+      <rect x="576" y="256" width="1" height="8"/><rect x="609" y="260" width="1" height="4"/><rect x="643" y="260" width="1" height="4"/><rect x="676" y="260" width="1" height="4"/><rect x="710" y="260" width="1" height="4"/><rect x="744" y="256" width="1" height="8"/><rect x="777" y="260" width="1" height="4"/><rect x="811" y="260" width="1" height="4"/><rect x="844" y="260" width="1" height="4"/><rect x="878" y="260" width="1" height="4"/><rect x="911" y="256" width="1" height="8"/>
+    </g>
+    <rect class="ink" x="576" y="262" width="158" height="3"/>
+    <rect class="ft" x="734" y="256" width="1" height="8"/>
+    <rect class="ink" x="809" y="248" width="2" height="16"/>
+  </svg>
+  <div class="tb"><p class="nm">Display</p><p class="tg">Monitor brightness over DDC/CI for Quickshell Swiss: the bar glyph beside volume, the panel, the key OSD.</p></div>
+</div>

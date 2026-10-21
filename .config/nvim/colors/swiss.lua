@@ -1,0 +1,1 @@
+../../swiss-desktop/build/nvim-swiss.lua

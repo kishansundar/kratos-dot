@@ -1,0 +1,11 @@
+#!/bin/sh
+# Show the launch mark for apps you start from a keybind instead of the launcher or dock.
+# usage: busy-launch <app id> <command> [args...]
+#   busy-launch zen zen
+#   busy-launch org.gnome.Nautilus nautilus --new-window
+# <app id> is the Wayland app id the window will have (what the title module shows).
+# If you start Quickshell with `qs -c <name>`, add `-c <name>` after `qs`.
+[ "$#" -ge 2 ] || { echo "usage: busy-launch <app id> <command> [args...]" >&2; exit 2; }
+id="$1"; shift
+qs ipc call busy launch "$id" "$id" >/dev/null 2>&1 &
+exec "$@"

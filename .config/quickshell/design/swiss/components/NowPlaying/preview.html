@@ -1,0 +1,23 @@
+<!-- @dsCard group="Bar" height=360 subtitle="Now Playing: title slot ≤ 192px, scrolls when longer; transport fixed at the right" -->
+<div class="stage flush">
+<div class="bar label" style="justify-content:flex-end"><div class="mod"><div class="np "><span class="mono who label">spotify</span><span class="track"><span class="slot label" title="Kesariya — Arijit Singh"><span class="run"><span>Kesariya — Arijit Singh</span><span aria-hidden="true">Kesariya — Arijit Singh</span></span></span><span class="prog" style="width:35%"></span></span><span class="ctl"><button class="hit" aria-label="previous"><span class="ic">&#xE017;</span></button><button class="hit" aria-label="pause"><span class="ic">&#xE015;</span></button><button class="hit" aria-label="next"><span class="ic">&#xE016;</span></button></span></div></div></div><div class="label faint" style="padding:var(--s2) var(--barPadX) var(--s4)">Fits (23 chars): static, slot shrinks to the text.</div>
+<div class="bar label" style="justify-content:flex-end"><div class="mod"><div class="np "><span class="mono who label">zen</span><span class="track"><span class="slot label" title="Subathon is back! SUBATHON DAY 16 — It’s our 14th month of streaming"><span class="run"><span>Subathon is back! SUBATHON DAY 16 — It’s our 14th month of streaming</span><span aria-hidden="true">Subathon is back! SUBATHON DAY 16 — It’s our 14th month of streaming</span></span></span><span class="prog" style="width:62%"></span></span><span class="ctl"><button class="hit" aria-label="previous"><span class="ic">&#xE017;</span></button><button class="hit" aria-label="pause"><span class="ic">&#xE015;</span></button><button class="hit" aria-label="next"><span class="ic">&#xE016;</span></button></span></div></div></div><div class="label faint" style="padding:var(--s2) var(--barPadX) var(--s4)">Longer than 192px: holds 1.5s, scrolls at 32 px/s, loops with a 48px gap. Hover pauses.</div>
+<div class="bar label" style="justify-content:flex-end"><div class="mod"><div class="np paused"><span class="mono who label">spotify<span class="faint"> +1</span></span><span class="track"><span class="slot label" title="Vaathi Coming — Anirudh Ravichander"><span class="run"><span>Vaathi Coming — Anirudh Ravichander</span><span aria-hidden="true">Vaathi Coming — Anirudh Ravichander</span></span></span><span class="prog" style="width:80%"></span></span><span class="ctl"><button class="hit" aria-label="previous"><span class="ic">&#xE017;</span></button><button class="hit" aria-label="play"><span class="ic">&#xE014;</span></button><button class="hit" aria-label="next"><span class="ic">&#xE016;</span></button></span></div></div></div><div class="label faint" style="padding:var(--s2) var(--barPadX) var(--s4)">Paused: title muted, play glyph. "+1" = another player; click the id to switch.</div>
+</div>
+<script>
+(function(){
+  const cs=getComputedStyle(document.documentElement), ms=v=>parseFloat(v)*(/ms$/.test(v.trim())?1:1000), px=v=>parseFloat(v);
+  const speed=px(cs.getPropertyValue('--marqueeSpeed')), hold=ms(cs.getPropertyValue('--marqueeHold')), gap=px(cs.getPropertyValue('--marqueeGap'));
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.np .slot').forEach(slot=>{
+    const run=slot.querySelector('.run'), a=run.children[0];
+    if (a.scrollWidth<=slot.clientWidth || reduce){ slot.classList.add('static'); if(reduce) a.classList.add('ellip'); return; }
+    const dist=a.scrollWidth+gap, dur=dist/speed*1000; let t0=null, paused=false;
+    slot.addEventListener('mouseenter',()=>paused=true); slot.addEventListener('mouseleave',()=>paused=false);
+    function step(ts){ if(t0===null) t0=ts; let e=ts-t0; if(paused){ t0=ts-Math.max(0,Math.min(e,hold+dur)); }
+      const x = e<hold ? 0 : Math.min((e-hold)/dur,1)*dist; run.style.transform='translateX('+(-Math.round(x))+'px)';
+      if(e>=hold+dur){ t0=ts; } requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  });
+})();
+</script>

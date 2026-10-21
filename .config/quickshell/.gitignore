@@ -1,0 +1,3 @@
+__pycache__/
+# Quickshell writes this for qmlls when an empty one exists (its own build folder and import paths): not source.
+.qmlls.ini

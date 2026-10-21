@@ -1,0 +1,5 @@
+## Quickshell Swiss (bar) · Panels · Now Playing · Dashboard
+- The build brief is `design/AGENT_BRIEF.md`; follow its phases and stop at each gate.
+- Seven design systems: `design/swiss/` (the bar), `design/panels/` (popup shell, network + Tailscale, Bluetooth, sound, notifications, date and time, power, control-centre tiles), `design/now-playing/` (the media panel), `design/dashboard/` (the system overlay), `design/display/` (monitor brightness over DDC/CI: bar glyph left of volume, panel, key OSD), `design/tray-row/` (tray chevron, Claude tray item, keep-awake), `design/launcher/` (app launcher). Read the relevant README, then the component's README, before any UI work.
+- Values only from the systems' `tokens.json` files, mirrored in one `Theme.qml`. One red accent per view; ink marks: filled circle = on, ring = off, triangle = attention. Light and dark are equals.
+- Icons only via `Glyphs.qml` (Swiss Glyphs, 16px, regenerated with `design/glyphs/build.py`). Fonts via `design/fonts.nix`. Credit the NixOS snowflake (CC-BY 4.0).

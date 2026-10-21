@@ -1,0 +1,43 @@
+What real MPRIS players send, recorded 15 October 2026 before building Now Playing v2 (design/now-playing/README.md,
+"Implementation notes"). The panel's layout and time-row choices are tested against these.
+
+==== Zen 1.x (Firefox engine), a YouTube tab, playing ======================================================
+$ playerctl -l
+firefox.instance_1_81
+$ playerctl -p firefox.instance_1_81 status
+Playing
+$ playerctl -p firefox.instance_1_81 metadata
+firefox mpris:trackid             '/org/mpris/MediaPlayer2/firefox'
+firefox xesam:title               I replaced Linux with OpenBSD - Here's What Happened
+firefox xesam:album
+firefox xesam:artist              Zei
+firefox mpris:artUrl              file:///home/kishan/.config/zen/firefox-mpris/385834_56.png
+firefox xesam:url                 https://www.youtube.com/watch?v=FWqQgJMPK20
+$ playerctl -p firefox.instance_1_81 position       (then again 2 s later, still playing)
+0.000006
+0.000006
+Also from D-Bus: CanSeek true, CanRaise true, CanGoNext / CanGoPrevious false, no Shuffle or LoopStatus properties,
+Volume 1.0 (writable: a set of 0.9 read back as 0.9).
+The art file is 336 x 188 (16:9, wide).
+-> no mpris:length and a position that never moves: the "untimed" row ("zen doesn't report position"), the
+   "video" layout. Not "live".
+
+==== mpv 0.41 with mpv-mpris 1.3, a local mp3 with tags and cover art, playing ======================================
+$ playerctl -l
+mpv.instance-ROvpHiPO
+$ playerctl -p mpv.instance-ROvpHiPO status
+Playing
+$ playerctl -p mpv.instance-ROvpHiPO metadata
+mpv   mpris:trackid             '/mpv/mpris/Track/0'
+mpv   xesam:contentCreated      2021-01-01T00:00:00Z
+mpv   xesam:album               Master (Original Motion Picture Soundtrack)
+mpv   mpris:artUrl              data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAlgAAAJY… (600 x 600 png, cut here)
+mpv   mpris:length              221000000
+mpv   xesam:artist              Anirudh Ravichander
+mpv   xesam:title               Vaathi Coming
+mpv   xesam:url                 file:///…/media/a.mp3
+$ playerctl -p mpv.instance-ROvpHiPO position      (then again 2 s later)
+1.930866
+3.912338
+-> a length, a moving position, CanSeek: the "seekable" row; square art: the "album" layout.
+(mpv also gives an endless HTTP stream a length that grows and says CanSeek: mpv cannot show the "live" row.)

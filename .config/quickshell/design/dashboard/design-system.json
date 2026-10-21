@@ -1,0 +1,25 @@
+{
+  "v": 3,
+  "assetGroups": {},
+  "blobs": {},
+  "createdOnFiles": {
+    "at": "2026-10-15T08:03:38Z",
+    "v": 1
+  },
+  "docs": {
+    "readme": "project/README.md",
+    "sections": []
+  },
+  "groups": [],
+  "lastChange": {
+    "by": "Kishan",
+    "at": "2026-10-15T11:45:00Z",
+    "via": "Claude",
+    "note": "Redesigned from scratch: centred 1152 panel, instrument sheet on one 4-column grid, ink only; Services and Jobs removed"
+  },
+  "layout": "files",
+  "libraries": [],
+  "namespace": "QSDash",
+  "sections": {},
+  "title": "Quickshell Swiss Dashboard"
+}

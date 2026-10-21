@@ -1,0 +1,25 @@
+<!-- @dsCard height=288 -->
+<style>
+  .cv { position: relative; width: 960px; height: 288px; background: var(--bg); overflow: hidden; }
+  .cv svg { position: absolute; left: 0; top: 0; }
+  .ink { fill: var(--text); } .mid { fill: var(--textMuted); } .acc { fill: var(--accent); } .ln { fill: var(--line); } .alt { fill: var(--surfaceAlt); }
+  .rg { fill: none; stroke: var(--text); stroke-width: var(--marker); }
+  .tb { position: absolute; left: var(--s5); bottom: var(--s5); max-width: 440px; }
+  .nm { font-family: var(--font-display); font-weight: 700; font-size: 72px; line-height: 0.95; letter-spacing: -0.02em; color: var(--text); margin: 0; }
+  .tg { font-family: var(--font-sans); font-size: 14px; line-height: 20px; color: var(--textMuted); margin: var(--s2) 0 0; }
+</style>
+<div class="cv">
+  <!--
+    blocks: surfaceAlt panel 384×288 bleeding top and bottom, ink bar rule 480×2 at the top, accent primary-action square 96×32 — radius 0
+    arrangement: one panel hung from the bar rule, right of x=480, bleeding off the bottom like a popup
+    pattern: the list of state marks — four rows on the s7 (48px) module: one filled ink circle (selected), three rings, each with its name bar and a hairline rule
+    scales: module s7 48, markCircle scaled ×2, marker 2, rule 1, radius 0
+  -->
+  <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+    <rect class="alt" x="576" y="0" width="384" height="288"/>
+    <rect class="ink" x="480" y="0" width="480" height="2"/>
+    <circle class="rg" cx="600" cy="48" r="8"/><rect class="mid" x="624" y="46" width="144" height="4"/><rect class="ln" x="576" y="71" width="384" height="1"/><circle class="ink" cx="600" cy="96" r="8"/><rect class="ink" x="624" y="94" width="192" height="4"/><rect class="ln" x="576" y="119" width="384" height="1"/><circle class="rg" cx="600" cy="144" r="8"/><rect class="mid" x="624" y="142" width="96" height="4"/><rect class="ln" x="576" y="167" width="384" height="1"/><circle class="rg" cx="600" cy="192" r="8"/><rect class="mid" x="624" y="190" width="168" height="4"/><rect class="ln" x="576" y="215" width="384" height="1"/>
+    <rect class="acc" x="600" y="240" width="96" height="32"/>
+  </svg>
+  <div class="tb"><h1 class="nm">Quickshell<br>Panels</h1><p class="tg">Wi-Fi, Bluetooth, sound, notifications, power.</p></div>
+</div>

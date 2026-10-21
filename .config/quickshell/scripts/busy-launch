@@ -1,0 +1,18 @@
+#!/bin/sh
+# busy-launch <app id> <command> [args...]: start an app from a keybind with the bar's "starting" mark, as the launcher
+# and the dock do (the owner's busy-indicator package; services/Busy). <app id> is the Wayland app id its window will
+# have; the shell finds its desktop entry for the name ("Zen Browser") and the other ids its window may carry.
+#   busy-launch zen zen
+#   busy-launch kitty kitty yazi
+# mango's binds call it by its path (~/.config/mango/bind.conf). It starts through scripts/launch, as they do: the
+# app's output in the journal (journalctl -t <app id>), and a notification if it quits with an error at once.
+[ "$#" -ge 2 ] || { echo "usage: busy-launch <app id> <command> [args...]" >&2; exit 2; }
+id="$1"; shift
+# Before the app (40 ms), so a start that fails at once ends a mark that is already there.
+qs ipc call busy launch "$id" "$id" >/dev/null 2>&1
+# Its desktop entry's name for the notification ("Helium"), else the id.
+name=$id
+for dir in $(echo "${XDG_DATA_HOME:-$HOME/.local/share}:${XDG_DATA_DIRS:-/usr/share}" | tr ':' ' '); do
+    [ -f "$dir/applications/$id.desktop" ] && { name=$(sed -n 's/^Name=//p' "$dir/applications/$id.desktop" | head -n 1); break; }
+done
+exec "$(dirname "$0")/launch" "$id" "${name:-$id}" "$@"

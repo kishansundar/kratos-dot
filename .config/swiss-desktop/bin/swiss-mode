@@ -1,0 +1,53 @@
+#!/bin/sh
+# Switches the whole desktop between Light and Dark Mode.
+#   swiss-mode light | dark | toggle | status
+# Bound to Super+Shift+T in ~/.config/mango/bind.conf.
+#
+# Every app's colours for both modes are already built (bin/swiss-build); this only chooses between them:
+#   1. the mode file    -> the shell (bar, launcher, notifications, background) recolours itself
+#   2. the current link -> mango, hyprlock, btop and GTK 3 read their colours through build/current
+#   3. dconf            -> GTK 4, browsers, Electron apps and kitty follow the system colour scheme
+#   4. mango reload     -> window borders change; windows stay where they are
+# A step that fails is reported and skipped, so the others still switch.
+set -u
+root=$(cd "$(dirname "$0")/.." && pwd)
+state=${XDG_STATE_HOME:-$HOME/.local/state}/swiss
+modefile=$state/mode
+
+current=$(cat "$modefile" 2>/dev/null || echo dark)
+case ${1:-toggle} in
+    light|dark) mode=$1 ;;
+    toggle) [ "$current" = dark ] && mode=light || mode=dark ;;
+    status) echo "$current"; exit 0 ;;
+    *) echo "usage: swiss-mode light|dark|toggle|status" >&2; exit 2 ;;
+esac
+
+[ -f "$root/build/$mode/palette.json" ] || { echo "swiss-mode: build/$mode is missing; run swiss-build" >&2; exit 1; }
+failed=0
+warn() { echo "swiss-mode: $*" >&2; failed=1; }
+
+# The value of one token, e.g. tok gtk_theme
+tok() { sed -n "s/^$1=//p" "$root/tokens/$mode.env"; }
+
+# 1. Mode file, written in place (not replaced) so the shell's file watch sees it.
+mkdir -p "$state" && printf '%s\n' "$mode" > "$modefile" || warn "could not write $modefile"
+
+# 2. One link chooses the colour files for every app that reads build/current/.
+ln -sfn "$mode" "$root/build/current" || warn "could not switch build/current"
+
+# 3. System colour scheme, GTK theme and icons. (accent-color, red in both modes, is set once in ~/nixos theme.nix.)
+dconf write /org/gnome/desktop/interface/color-scheme "'$(tok color_scheme)'" || warn "dconf color-scheme failed"
+dconf write /org/gnome/desktop/interface/gtk-theme "'$(tok gtk_theme)'" || warn "dconf gtk-theme failed"
+dconf write /org/gnome/desktop/interface/icon-theme "'$(tok icon_theme)'" || warn "dconf icon-theme failed"
+
+# 4. mango reads colors.conf again. From outside the session (e.g. SSH), find its socket.
+if [ -z "${MANGO_INSTANCE_SIGNATURE:-}" ]; then
+    MANGO_INSTANCE_SIGNATURE=$(ls "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"/mango-*.sock 2>/dev/null | head -1)
+    export MANGO_INSTANCE_SIGNATURE
+fi
+if [ -n "$MANGO_INSTANCE_SIGNATURE" ]; then
+    mmsg dispatch reload_config >/dev/null || warn "mango reload failed"
+fi
+
+echo "$mode"
+exit $failed

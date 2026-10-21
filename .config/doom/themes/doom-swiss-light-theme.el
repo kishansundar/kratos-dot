@@ -1,0 +1,1 @@
+../../swiss-desktop/build/light/doom-swiss-theme.el

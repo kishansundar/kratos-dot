@@ -1,0 +1,21 @@
+{
+  "mode": "@mode@",
+  "background": "#@background@",
+  "surface": "#@surface@",
+  "surface2": "#@surface2@",
+  "elevated": "#@elevated@",
+  "text": "#@text@",
+  "text2": "#@text2@",
+  "muted": "#@muted@",
+  "border": "#@border@",
+  "borderStrong": "#@border_strong@",
+  "accent": "#@accent@",
+  "accentFill": "#@accent_fill@",
+  "accentFg": "#@accent_fg@",
+  "selection": "#@selection@",
+  "success": "#@success@",
+  "warning": "#@warning@",
+  "error": "#@error@",
+  "info": "#@info@",
+  "wallpaper": "@wallpaper@"
+}
