@@ -18,6 +18,16 @@ let
   # Downscaler for videos bigger than the screen (4K); runs only when downscaling.
   ssimDownscaler = "${pkgs.mpv-shim-default-shaders}/share/mpv-shim-default-shaders/shaders/SSimDownscaler.glsl";
 
+  # Flips the picture on the GPU. The hflip/vflip filters would copy every frame back from NVDEC to the CPU.
+  flip = name: pos: pkgs.writeText "${name}.glsl" ''
+    //!HOOK MAIN
+    //!BIND HOOKED
+    //!DESC ${name}
+    vec4 hook() { return HOOKED_tex(${pos}); }
+  '';
+  hflip = flip "hflip" "vec2(1.0 - HOOKED_pos.x, HOOKED_pos.y)";
+  vflip = flip "vflip" "vec2(HOOKED_pos.x, 1.0 - HOOKED_pos.y)";
+
   # Video types mpv opens by default (Celluloid used to).
   videoTypes = [
     "video/mp4" "video/x-matroska" "video/matroska" "video/webm" "video/quicktime" "video/x-msvideo"
@@ -69,6 +79,12 @@ in
     sub-auto=fuzzy
     slang=en,eng
     volume-max=150
+  '';
+
+  # Read only while ~/.config/mpv/input.conf doesn't exist. Alt+v replaces the default secondary-subtitle toggle.
+  environment.etc."mpv/input.conf".text = ''
+    Alt+h no-osd change-list glsl-shaders toggle ${hflip}; show-text "Flip horizontal"
+    Alt+v no-osd change-list glsl-shaders toggle ${vflip}; show-text "Flip vertical"
   '';
 
   xdg.mime.defaultApplications = lib.genAttrs videoTypes (_: "mpv.desktop");
