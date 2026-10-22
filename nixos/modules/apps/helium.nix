@@ -43,12 +43,12 @@ let
 
     stdenv.mkDerivation (finalAttrs: {
       pname = "helium";
-      version = "0.19.4.1";
+      version = "0.20.1.1";
 
       # Official build; ../../update-browsers.sh writes the newest version and hash.
       src = fetchurl {
         url = "https://github.com/imputnet/helium-linux/releases/download/${finalAttrs.version}/helium-${finalAttrs.version}-x86_64_linux.tar.xz";
-        hash = "sha256-bKbkoA/vWRaCH7GvipYHzGs4b2eKfrQi5V8ZEWujBGk=";
+        hash = "sha256-ICP6RM76D70+GQcch+kNYSdfCLqPW0jVjCNSFVZem1M=";
       };
 
       nativeBuildInputs = [
@@ -101,13 +101,16 @@ let
         runHook postInstall
       '';
 
-      # Run-time libraries autoPatchelf can't detect: graphics, video, sound, screen sharing.
+      # Run-time libraries autoPatchelf can't detect: graphics, video, sound, screen sharing, and GTK, which Chromium
+      # loads itself; without GTK, Helium ignores the system's light / dark mode (the portal's setting reaches it only
+      # through GTK).
       preFixup = ''
         makeWrapper $out/opt/helium/helium $out/bin/helium \
           "''${gappsWrapperArgs[@]}" \
           --set CHROME_VERSION_EXTRA nixos \
           --prefix LD_LIBRARY_PATH : ${
             lib.makeLibraryPath [
+              gtk3
               libGL
               libpulseaudio
               libva
