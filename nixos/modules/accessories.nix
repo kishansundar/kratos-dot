@@ -41,10 +41,10 @@ in
   # sudo systemctl start openrgb (it then runs until stopped or the next boot).
   systemd.services.openrgb.wantedBy = lib.mkForce [ ];
 
-  # At every boot, once OpenRGB has found the devices: all lighting off, the keyboard dim white (openrgb-lights-off.sh),
+  # At every boot, once OpenRGB has found the devices: all lighting off, the keyboard white at 15 % (openrgb-lights-off.sh),
   # then the server stops.
   systemd.services.openrgb-lights-off = {
-    description = "Turn off all RGB lighting, keyboard dim white";
+    description = "Turn off all RGB lighting, keyboard white at 15 %";
     wantedBy = [ "multi-user.target" ];
     wants = [ "openrgb.service" ];  # not requires: stopping the server at the end must not stop this unit
     after = [ "openrgb.service" "coolercontrold.service" ];
