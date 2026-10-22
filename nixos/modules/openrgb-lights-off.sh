@@ -1,5 +1,5 @@
 # Wait for the OpenRGB server to finish detecting devices, then turn every one off except the keyboard, which gets
-# dim white. Run by openrgb-lights-off.service (accessories.nix) at boot.
+# white at 15 %. Run by openrgb-lights-off.service (accessories.nix) at boot.
 cfg=${RUNTIME_DIRECTORY:-$(mktemp -d)}
 rgb() { openrgb --config "$cfg" --nodetect "$@"; }
 
@@ -12,11 +12,11 @@ for _ in $(seq 120); do
   sleep 1
 done
 
-# One line per device: index, type, modes. The keyboard (the Razer) white at 5 % (0D of FF), as OpenRazer had it;
-# every other device "Off" where it has that mode, black otherwise.
+# One line per device: index, type, modes. The keyboard (the Razer) white at 15 % (26 of FF, the same as
+# ~/.config/hypr/keyboard.sh); every other device "Off" where it has that mode, black otherwise.
 args=()
 while IFS=$'\t' read -r idx type modes; do
-  if [[ $type == Keyboard ]]; then args+=(-d "$idx" -m Direct -c 0D0D0D); continue; fi
+  if [[ $type == Keyboard ]]; then args+=(-d "$idx" -m Direct -c 262626); continue; fi
   modes=${modes//[][]/}                    # "[Off]" marks the current mode
   if [[ " $modes " == *" Off "* ]]; then
     args+=(-d "$idx" -m Off)
