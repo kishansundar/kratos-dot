@@ -28,7 +28,7 @@
     hyprlock            # screen locker
     wlopm               # turns the screens off and on (used by hypridle)
     wlr-randr           # lists what each screen offers: sizes, refresh rates, scale (by hand; nothing calls it)
-    cmatrix             # screensaver: matrix rain (started by hypridle)
+    lavat               # screensaver: lava lamp (started by hypridle)
     wlsunset            # night light (Super+Alt+N in mango's bind.conf)
     # quickshell: bar, panels and notifications (~/.config/quickshell); wrapped so its Qt also finds the WebP reader the package leaves out
     (symlinkJoin {
