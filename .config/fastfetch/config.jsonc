@@ -9,9 +9,11 @@
 
     // The NixOS snowflake (portrait.png, a WebP) in the one red, drawn by kitty as an image: 20 x 8 cells is square in
     // a Geist Mono 11 cell (about 9 x 22 px). Outside kitty fastfetch falls back to its own text logo.
+    // "kitty", not "kitty-direct": direct sends only the file path, which kitty on another machine (ssh from the Mac)
+    // cannot open, and with no image the cursor is not moved down, so the text is drawn 7 lines up, over the login.
     // Remake it after changing portrait.png: magick portrait.png -fill '#E93F20' -colorize 100 PNG32:snowflake.png
     "logo": {
-        "type": "kitty-direct",
+        "type": "kitty",
         "source": "~/.config/fastfetch/snowflake.png",
         "width": 20,
         "height": 8,
