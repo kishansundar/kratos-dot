@@ -271,6 +271,14 @@
   back). The first key press or wheel notch of a burst is written at once, the rest merge within settle into one more
   write. A wheel notch on a bar slot hides its tooltip until the pointer leaves, as a press does. The Display panel
   keeps its "setting…" state.
+- The running cat (the owner's ask, 23 October 2026, as on NixPad; their pick 1 of two rendered, over a 16 px Swiss
+  glyph): RunCat's cat from the Waycat font (github.com/CarloCattano/waycat; its repo states no licence, so ~/nixos
+  fonts.nix fetches it at a fixed commit and it is not in this repo), against "Swiss Glyphs only": bar/Status, its own
+  32 px slot between Claude and Wi-Fi, Theme.cat.size 24 like the NixOS mark, its feet on the glyphs' last ink row.
+  Asleep (curled, a "z") and muted under Theme.cat.sleepBelow (10 %) of Metrics.cpu, in ink and running above it at
+  GNOME RunCat's pace: five frames in strideMin + strideRange × (1 − load)² ms, 4.5 to 20 frames a second (rig: 7.0
+  a second at 27 %, 19.4 at 99 %, none at idle). Hidden until the font is installed; a running shell keeps its font
+  list, so restart it after the switch. Hover: "processor N % · Super+D"; a click opens the dashboard.
 
 ## QML / Quickshell gotchas found here
 - `sh tests/lint.sh [--all] [files]` runs qmllint (Quickshell's own qtdeclarative) with Quickshell's types and the

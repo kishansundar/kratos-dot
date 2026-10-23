@@ -68,6 +68,31 @@ Row {
 
     // ---- Status -----------------------------------------------------------------------------------
 
+    // The running cat (the owner's choice, 23 October 2026, as on NixPad): RunCat's cat from the Waycat font (~/nixos fonts.nix) on the baseline, Theme.cat.size like the NixOS mark; asleep and muted under Theme.cat.sleepBelow % processor load (Metrics.cpu, every second), running in ink faster as it rises; hidden until the font is installed; a click opens the dashboard
+    BarSlot {
+        id: catSlot
+        readonly property bool awake: Metrics.cpu >= Theme.cat.sleepBelow
+        property int frame: 0
+        visible: Qt.fontFamilies().includes("Waycat")
+        fixedWidth: Theme.size.hitTarget
+        tooltip: "processor " + (Metrics.cpu < 0 ? "…" : Math.round(Metrics.cpu) + " %") + " · Super+D"
+        onClicked: button => { if (button === Qt.LeftButton) Panels.toggle("dashboard", catSlot) }
+        Text {
+            x: Math.round((catSlot.width - width) / 2)
+            // Its feet on the glyphs' last ink row: their 14 px live area ends 1 px above the baseline (measured in a rig)
+            anchors { baseline: parent.top; baselineOffset: Theme.bar.baseline - 1 }
+            font { family: "Waycat"; pixelSize: Theme.cat.size }
+            color: catSlot.awake ? Theme.colors.text : Theme.colors.textMuted
+            text: catSlot.awake ? "ABCDE"[catSlot.frame] : "J"
+        }
+        Timer {
+            running: catSlot.awake && catSlot.visible
+            repeat: true
+            interval: Math.ceil((Theme.cat.strideMin + Theme.cat.strideRange * Math.pow(1 - Metrics.cpu / 100, 2)) / 5)
+            onTriggered: catSlot.frame = (catSlot.frame + 1) % 5
+        }
+    }
+
     // Network: the full Wi-Fi fan while connected, whatever the signal (the owner reads the strength in the network
     // panel; a fan with hairline arcs was the lightest glyph in the bar); the bare fan with Wi-Fi on but no network;
     // struck through with Wi-Fi off; the network glyph on a cable.
