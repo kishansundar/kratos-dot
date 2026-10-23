@@ -18,6 +18,8 @@
     ./modules/packages.nix
     ./modules/gaming.nix
     ./modules/scrypted.nix
+    ./modules/home-assistant.nix
+    ./modules/matterbridge.nix
     ./modules/apps/1password.nix
     ./modules/apps/helium.nix
     ./modules/apps/mpv.nix
