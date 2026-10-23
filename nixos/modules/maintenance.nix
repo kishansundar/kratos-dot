@@ -11,8 +11,8 @@ in
   # Identical files in the store are linked together as each package arrives, so a running program's file is never replaced later.
   nix.settings.auto-optimise-store = true;
 
-  # Weekly: the old generations go (../old-generations.sh: Nix's 14-day rule, but every profile keeps its newest 3, the
-  # boot menu's three, however old), then the store paths nothing uses any more. Never -d: that leaves no rollback.
+  # Weekly: the old generations go (../old-generations.sh: every profile keeps only its newest 3, the boot menu's three,
+  # and the current one), then the store paths nothing uses any more. Never -d: that leaves no rollback.
   # NixOS's own collector (nix-gc.service and its timer), given no options, so it removes no generations itself; a week
   # missed while the machine was off runs at the next boot.
   nix.gc = {

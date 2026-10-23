@@ -5,7 +5,7 @@ go=${1:-}
 used() { df -B1 --output=used / | tail -1 | tr -d ' '; }
 before=$(used)
 
-echo "== NixOS generations (the newest 3 stay, the boot menu's, and any from the last 14 days)"
+echo "== NixOS generations (the newest 3 stay, the boot menu's)"
 nixos-rebuild list-generations
 # The weekly nix-gc job's own rule (old-generations.sh), so "sysclean go" never removes more than it would.
 if [ "$go" ]; then sudo @oldGenerations@ go
