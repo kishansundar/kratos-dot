@@ -469,4 +469,12 @@ Singleton {
         readonly property int launchTimeout: 15000 // no window by then: "starting" goes quietly (tray apps, Steam)
         readonly property int launchRefocus: 500   // the launched app's own window regaining focus this soon is not it
     }
+
+    // ---- Running cat (the owner's choice, 23 October 2026, as on NixPad): bar/Status; GNOME RunCat's stride of five frames lasts strideMin + strideRange × (1 − load)² ms ----
+    readonly property QtObject cat: QtObject {
+        readonly property int size: 24             // like the NixOS mark
+        readonly property int sleepBelow: 10       // % processor load: under it the cat sleeps, still and muted
+        readonly property int strideMin: 250       // ms for five frames at full load (20 frames a second)
+        readonly property int strideRange: 850     // ms added at no load, by (1 − load)²
+    }
 }
