@@ -12,6 +12,11 @@
       "radio_browser"
       "shopping_list"
       "isal"
+      # Devices HA finds on the LAN (Apple TV, HomeKit, Google TV, Cast); without these it logs errors.
+      "apple_tv"
+      "homekit_controller"
+      "androidtv_remote"
+      "cast"
     ];
     config = {
       default_config = { };
