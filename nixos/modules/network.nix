@@ -1,4 +1,4 @@
-# How this machine is reached: Wi-Fi through NetworkManager, the tailnet (Tailscale), and SSH over the tailnet only.
+# How this machine is reached: Wi-Fi through NetworkManager, the tailnet (Tailscale), and SSH over the tailnet or the LAN.
 # The Wi-Fi driver's own settings are in hardware.nix.
 {
   # Wi-Fi and Ethernet. Use nmtui or nmcli to connect.
@@ -10,14 +10,13 @@
   networking.networkmanager.wifi.powersave = false;
   services.tailscale.enable = true;
   networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 22 ]; # SSH (services.openssh below)
+  # LAN SSH from any house device (no fixed leases needed), never from the router .1 or the Pi's subnet-route address .2; IPv4 only.
+  networking.firewall.extraCommands = "iptables -A nixos-fw ! -i tailscale0 -p tcp --dport 22 -m iprange --src-range 10.0.0.3-10.0.0.254 -j nixos-fw-accept";
   # Applied at boot with `tailscale set`: Tailscale DNS stays off (your own DNS keeps answering), and kishan may run
   # `tailscale up` / `down` / `set` without sudo (the shell's dashboard switch uses it).
   services.tailscale.extraSetFlags = [ "--accept-dns=false" "--operator=kishan" ];
 
-  # Key login only (audit SEC-01), and only over Tailscale (audit D13, 20 October 2026): port 22 is closed to the LAN, so
-  # ssh to this machine's Tailscale address (MagicDNS is off on this tailnet, so the name "kratos" only
-  # works where a client's ~/.ssh/config names it). The logins until then came over the LAN, from nixpad and the
-  # MacBook, both on the tailnet. Keep the keys safe: RustDesk and the console remain if they are lost.
+  # Key login only (audit SEC-01); port 22 over Tailscale and, since 24 Oct 2026, the LAN (K-1, K-2); RustDesk and the console remain if the keys are lost.
   services.openssh = {
     enable = true;
     openFirewall = false;

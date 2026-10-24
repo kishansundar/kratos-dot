@@ -15,6 +15,6 @@
   networking.firewall.allowedTCPPortRanges = [ { from = 41000; to = 41010; } ];
   # Live video replies (RTCP) from iPhones and the Apple TV use random UDP ports: accept UDP from the home network only.
   networking.firewall.extraCommands = "iptables -A nixos-fw -s 10.0.0.0/24 -p udp -j nixos-fw-accept";
-  # Scrypted's admin page over Tailscale only, like SSH.
+  # Scrypted's admin page over Tailscale only.
   networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 10443 ];
 }
