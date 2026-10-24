@@ -26,6 +26,8 @@
         unit_system = "metric";
         country = "IN";
       };
+      # Blocks an address after 5 failed logins (bans are kept in ip_bans.yaml in HA's state folder; delete the line and restart HA to lift one).
+      http = { ip_ban_enabled = true; login_attempts_threshold = 5; };
       # The cleaning presets reach Apple Home as switches through a HomeKit bridge of their own (so Siri can run them by
       # name). Matterbridge gives scripts a Matter device type Apple Home doesn't show; the vacuum itself stays on Matter.
       homekit = [
@@ -69,6 +71,7 @@
   };
   # HomeKit on the home network: the bridge's port (mDNS, UDP 5353, is already open for Scrypted).
   networking.firewall.allowedTCPPorts = [ 21064 ];
-  # Home Assistant's own page over Tailscale only, like Scrypted's; on Kratos itself it is http://localhost:8123.
+  # Home Assistant's own page over Tailscale and the LAN (K-1, v4 only), never from the router .1 or the Pi's subnet-route .2; on Kratos itself it is http://localhost:8123.
   networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 8123 ];
+  networking.firewall.extraCommands = "iptables -A nixos-fw ! -i tailscale0 -p tcp --dport 8123 -m iprange --src-range 10.0.0.3-10.0.0.254 -j nixos-fw-accept";
 }
