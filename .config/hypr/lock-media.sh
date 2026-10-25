@@ -8,10 +8,11 @@
 #   lock-media.sh toggle   play / pause (the square's click)
 #   lock-media.sh reset    forget the last lock's player (lock.sh, as the screen locks and as it unlocks)
 # LOCK_MEDIA_INFO=<file> reads the four lines from another file (for a test rig: no player is touched).
+# LOCK_DRM=<dir> reads the screens' state from a stand-in for /sys/class/drm (for a test rig).
 now=${XDG_CACHE_HOME:-$HOME/.cache}/swiss-desktop/now-playing
 dir=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/lock-media
 img=$HOME/.config/hypr/lock-media
-mkdir -p "$dir"
+[ -d "$dir" ] || mkdir -p "$dir"     # a test first: three widgets run this every second
 
 put() { printf '%s\n' "$2" > "$dir/$1.new" && mv -f "$dir/$1.new" "$dir/$1"; }   # whole lines only, for the readers
 # hyprlock labels read Pango markup; a line longer than the password field's width (384 px) is cut with an ellipsis
@@ -20,6 +21,15 @@ fit() { awk -v n="$1" '{ if (length($0) > n) print substr($0, 1, n - 1) "…"; e
 
 case ${1:-} in
 title)
+    # While every connected screen is off (screens.sh), nobody sees the lock screen: print nothing and leave the rest
+    # as it is; the first second with a screen on puts it all right. Built-ins only, so the check costs no process. A
+    # screen that reports no state counts as on.
+    dark=
+    for o in "${LOCK_DRM:-/sys/class/drm}"/card*-*; do
+        read -r s 2>/dev/null < "$o/status" && [ "$s" = connected ] || continue
+        read -r d 2>/dev/null < "$o/dpms" && [ "$d" = Off ] && dark=1 || { dark=; break; }
+    done
+    [ -n "$dark" ] && exit 0
     # The shell rewrites its player's four lines in this file whenever they change (services/Media.qml nowPlaying),
     # so a read here costs no IPC client (~46 ms of CPU each, every second the screen is locked).
     status= app= title= artist=

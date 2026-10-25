@@ -5,7 +5,17 @@
 # on the page margin. Pango places text by advance, not by ink, so the spaces are sized here from Geist Bold's own side
 # bearings (fontTools, Geist 1.7.0): a Geist Bold space is 0.228 em, so one set at size W / 0.228 is W wide.
 #   lock-clock.sh RED [HHMM]    RED: hex without "#"; HHMM: for tests (default: now)
+# LOCK_DRM=<dir> reads the screens' state from a stand-in for /sys/class/drm (for a test rig).
 red=${1:?usage: lock-clock.sh RED [HHMM]}     # hyprlock passes $accent_hex (swiss-build: the one red)
+# While every connected screen is off (screens.sh), nobody sees the clock: print nothing and skip the work. Built-ins
+# only, so the check costs no process (hyprlock runs this every second, all the time the screen is locked). A screen
+# that reports no state counts as on.
+dark=
+for o in "${LOCK_DRM:-/sys/class/drm}"/card*-*; do
+    read -r s 2>/dev/null < "$o/status" && [ "$s" = connected ] || continue
+    read -r d 2>/dev/null < "$o/dpms" && [ "$d" = Off ] && dark=1 || { dark=; break; }
+done
+[ -n "$dark" ] && exit 0
 t=${2:-$(date +%H%M)}
 exec awk -v t="$t" -v red="$red" 'BEGIN {
     px = 128          # figure size: 96 pt
