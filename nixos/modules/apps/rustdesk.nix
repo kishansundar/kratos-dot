@@ -39,7 +39,8 @@
         postPatch = old.postPatch + ''
           substituteInPlace ../src/platform/linux.rs --replace-fail 'sleep_millis(500);' 'sleep_millis(30_000);'
           # A failed screen capture (screen off) no longer leaves the "already set up" mark on, so the next connection tries again.
-          substituteInPlace ../src/server/wayland.rs --replace-fail 'Capturer::new(display).with_context(|| {' 'Capturer::new(display).map_err(|e| { *PIPEWIRE_INITIALIZED.write().unwrap() = false; e }).with_context(|| {'
+          # 1.5.0 dropped the with_context after Capturer::new but still sets the mark before it (checked 2026-10-25).
+          substituteInPlace ../src/server/wayland.rs --replace-fail 'Box::new(Capturer::new(display)?)' 'Box::new(Capturer::new(display).map_err(|e| { *PIPEWIRE_INITIALIZED.write().unwrap() = false; e })?)'
         '';
         # librustdesk.so's RUNPATH names rustc's rustlib folder, which pulled rustc and LLVM (1.7 GB) into the system (audit
         # NIX-03). Nothing is loaded from there (no NEEDED library lives in it; running RustDesk maps nothing from rustc):
