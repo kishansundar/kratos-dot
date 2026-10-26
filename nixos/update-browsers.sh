@@ -27,12 +27,12 @@ update() {
   json=$(nix store prefetch-file --json $unpack "${url_template//@VERSION@/$latest}")
   hash=$(echo "$json" | grep -o 'sha256-[^"]*')
   fetched=$(echo "$json" | grep -o '"storePath":"[^"]*"' | cut -d'"' -f4)
-  # Each file has one version line and one hash line; anything else is left for a hand edit.
-  if [ "$(grep -c '^ *version = "' "$file")" != 1 ] || [ "$(grep -c '^ *hash = "sha256-' "$file")" != 1 ]; then
-    echo "$name: $file does not have exactly one version and one hash line; set $latest and $hash by hand" >&2
+  # Each file has one version line; the package's hash is the first hash line after it (fonts.nix also holds Waycat's, further down).
+  if [ "$(grep -c '^ *version = "' "$file")" != 1 ] || [ -z "$(sed -n '/^ *version = "/,${/^ *hash = "sha256-/p}' "$file")" ]; then
+    echo "$name: $file does not have one version line with a hash line after it; set $latest and $hash by hand" >&2
     return 1
   fi
-  sed -i "s|^\( *version = \)\".*\";\$|\1\"$latest\";|; s|^\( *hash = \)\"sha256-.*\";\$|\1\"$hash\";|" "$file"
+  sed -i "/^ *version = \"/,/^ *hash = \"sha256-/{s|^\( *version = \)\".*\";\$|\1\"$latest\";|; s|^\( *hash = \)\"sha256-.*\";\$|\1\"$hash\";|}" "$file"
   echo "$name: $current -> $latest (written to $file)"
   changed=1
 }
